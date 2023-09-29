@@ -4,9 +4,9 @@ import java.util.List;
 public class Map {
     public Room buildMap() {
         // Create room objects and build the game map
-        Room room1 = new Room("Room 1", "A room with no distinct features, except two doors.");
-        Room room2 = new Room("Room 2", "A dimly lit room with a musty smell.");
-        Room room3 = new Room("Room 3", "A large room with a high ceiling.");
+        Room room1 = new Room("Room 1", "A room with no distinct features, except a 'Shiny Sword' lying on the ground.");
+        Room room2 = new Room("Room 2", "A dimly lit room with a musty smell and a 'Dagger' lying on the ground, covered in blood.");
+        Room room3 = new  Room("Room 3", "A large room with a high ceiling.");
         Room room4 = new Room("Room 4", "A mysterious room filled with strange artifacts.");
         Room room5 = new Room("Room 5", "A hidden chamber with a single exit to the east.");
         Room room6 = new Room("Room 6", "A narrow corridor with flickering torches.");
@@ -48,19 +48,19 @@ public class Map {
         room9.setEast(room5);
 
         // Create items
-        Item sword = new Item("Sword", "A sharp and shiny sword.");
+        Item sword = new Item("Shiny Sword", "A sharp and shiny sword.");
         Item dagger = new Item("Dagger", "A small, sharp dagger.");
+        Item RoboticEye = new Item("RoboticEye", "A Wierd looking robotic eye.");
 
         // Add items to rooms
         room1.addItem(sword);
         room2.addItem(dagger);
+        room3.addItem(RoboticEye);
 
         // Create the starting room
         Room startingRoom = new Room("Starting Room", "This is where your adventure begins.");
-
-        // Connect the starting room to the rest of the map
-        startingRoom.setEast(room1);
-
+        startingRoom.setEast(room1); // Connect the starting room to Room 1
+        startingRoom.addItem(sword);
         return startingRoom;
     }
 

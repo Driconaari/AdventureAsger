@@ -45,8 +45,34 @@ public class UserInterface {
             // Handle turning off the light (if applicable)
         } else if (input.equals("see items")) {
             displayItemsInRoom();
+        } else if (input.equals("inventory")) {
+            handleInventoryCommand();
         } else {
             System.out.println("Invalid command. Type 'help' for a list of commands.");
+        }
+    }
+
+    private void displayItemsInRoom() {
+        List<Item> items = currentRoom.getItems();
+        if (items.isEmpty()) {
+            System.out.println("There are no items in this room.");
+        } else {
+            System.out.println("Items in the room:");
+            for (Item item : items) {
+                System.out.println("- " + item.getName());
+            }
+        }
+    }
+
+    private void handleInventoryCommand() {
+        List<Item> playerInventory = player.getInventory();
+        if (playerInventory.isEmpty()) {
+            System.out.println("Your inventory is empty.");
+        } else {
+            System.out.println("Inventory:");
+            for (Item item : playerInventory) {
+                System.out.println("- " + item.getName() + ": " + item.getDescription());
+            }
         }
     }
 
@@ -86,6 +112,7 @@ public class UserInterface {
         System.out.println("  - turn on light: Turn on a light source (if available).");
         System.out.println("  - turn off light: Turn off a light source (if available).");
         System.out.println("  - see items: View the items in the current room.");
+        System.out.println("  - inventory: View your inventory.");
     }
 
     private void handleTakeCommand(String input) {
@@ -121,68 +148,28 @@ public class UserInterface {
 
     private void handleGoCommand(String input) {
         String direction = input.substring(3).trim();
-        boolean directionExists = tryDirection(direction);
+        Room nextRoom = getNextRoom(direction);
 
-        if (!directionExists) {
+        if (nextRoom != null) {
+            currentRoom = nextRoom;
+            displayRoomDescription();
+        } else {
             System.out.println("You cannot go that way.");
         }
     }
 
-    private boolean tryDirection(String direction) {
-        Room nextRoom = null;
-
+    private Room getNextRoom(String direction) {
         switch (direction) {
             case "north":
-                nextRoom = currentRoom.getNorth();
-                break;
+                return currentRoom.getNorth();
             case "east":
-                nextRoom = currentRoom.getEast();
-                break;
+                return currentRoom.getEast();
             case "south":
-                nextRoom = currentRoom.getSouth();
-                break;
+                return currentRoom.getSouth();
             case "west":
-                nextRoom = currentRoom.getWest();
-                break;
-        }
-
-        if (nextRoom != null) {
-            currentRoom = nextRoom;
-            int directionIndex = getDirectionIndex(direction);
-            if (directionIndex >= 0) {
-                triedDirections[directionIndex] = true;
-            }
-            displayRoomDescription();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private int getDirectionIndex(String direction) {
-        switch (direction.toLowerCase()) {
-            case "north":
-                return 0;
-            case "east":
-                return 1;
-            case "south":
-                return 2;
-            case "west":
-                return 3;
+                return currentRoom.getWest();
             default:
-                return -1; // Invalid direction
-        }
-    }
-
-    private void displayItemsInRoom() {
-        List<Item> items = currentRoom.getItems();
-        if (items.isEmpty()) {
-            System.out.println("There are no items in this room.");
-        } else {
-            System.out.println("Items in the room:");
-            for (Item item : items) {
-                System.out.println("- " + item.getName());
-            }
+                return null; // Invalid direction
         }
     }
 }
